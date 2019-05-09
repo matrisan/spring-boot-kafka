@@ -24,8 +24,9 @@ import java.util.List;
 @Service
 public class KafkaConsumer {
 
-    @KafkaListener(topics = "TestTopic", groupId = "TestGroup", clientIdPrefix = "#{ipService.getIPAddress()}")
+    @KafkaListener(topics = "TestTopic", groupId = "TestGroup", clientIdPrefix = "${spring.cloud.client.ip-address}")
     public void onMessage(List<ConsumerRecord<String, KafkaDataDO<String>>> dataList) {
+        // HostInfoEnvironmentPostProcessor
         dataList.stream().map(ConsumerRecord::value).forEach(one -> System.out.println("接收到数据:" + JSON.toJSONString(one)));
     }
 
