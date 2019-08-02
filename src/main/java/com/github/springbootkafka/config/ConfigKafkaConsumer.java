@@ -2,17 +2,22 @@ package com.github.springbootkafka.config;
 
 import com.github.springbootkafka.pojo.KafkaDataDO;
 import com.github.springbootkafka.serializer.KafkaDataDeserializer;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,35 +35,19 @@ import java.util.Map;
 @Configuration
 public class ConfigKafkaConsumer {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
-
-    private String batch = "2";
-
-    private Integer consumers = 2;
-
-    /**
-     * @return 返回消费者设置
-     */
-    @Bean
-    public Map<String, Object> consumerConfigs() {
-        Map<String, Object> props = new HashMap<>(5);
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaDataDeserializer.class);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "batch");
-        // maximum records per poll
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, batch);
-        return props;
-    }
+    @Resource
+    private KafkaProperties kafkaProperties;
 
     /**
      * @return 根据消费者设置 生成消费者工厂
      */
     @Bean
     public ConsumerFactory<String, KafkaDataDO<String>> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaDataDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props);
     }
+
 
     /**
      * @return kafka 客户端
@@ -67,11 +56,11 @@ public class ConfigKafkaConsumer {
     public ConcurrentKafkaListenerContainerFactory<String, KafkaDataDO<String>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, KafkaDataDO<String>> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(consumers);
+        factory.setConcurrency(2);
         // enable batch listening
         factory.setBatchListener(true);
         // 增加过滤器
-        factory.setRecordFilterStrategy(consumerRecord -> consumerRecord.value().getName().endsWith("1"));
+//        factory.setRecordFilterStrategy(consumerRecord -> consumerRecord.value().getName().endsWith("1"));
         return factory;
     }
 

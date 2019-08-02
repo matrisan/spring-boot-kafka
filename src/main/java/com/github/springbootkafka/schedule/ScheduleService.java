@@ -29,8 +29,8 @@ public class ScheduleService {
 
     @Scheduled(fixedRate = 1000)
     public void task() {
-        producer.onSend("TestTopic", getKafkaDataDTO("name1"));
-        producer.onSend("TestTopic", getKafkaDataDTO("name2"));
+        producer.onSend("TestTopic", (getKafkaDataDTO("name1")));
+        producer.onSend("TestTopic", (getKafkaDataDTO("name1")));
     }
 
     private KafkaDataDO<String> getKafkaDataDTO(String name) {
