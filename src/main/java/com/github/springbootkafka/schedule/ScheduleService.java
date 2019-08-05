@@ -20,8 +20,8 @@ import java.util.Date;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 public class ScheduleService {
 
     @Resource
@@ -29,14 +29,14 @@ public class ScheduleService {
 
     @Scheduled(fixedRate = 1000)
     public void task() {
-        producer.onSend("TestTopic", getKafkaDataDTO("name1"));
-        producer.onSend("TestTopic", getKafkaDataDTO("name2"));
+        producer.onSend("TestTopic1", getKafkaDataDTO("name1"));
+        producer.onSend("TestTopic1", getKafkaDataDTO("name2"));
     }
 
-    private KafkaDataDO<String> getKafkaDataDTO(String name) {
+    private String getKafkaDataDTO(String name) {
         KafkaDataDO<String> kafkaDataDTO = new KafkaDataDO<>(name, new Date().toString());
         System.out.println("产生的数据:" + JSON.toJSONString(kafkaDataDTO));
-        return kafkaDataDTO;
+        return kafkaDataDTO.toString();
     }
 
 }

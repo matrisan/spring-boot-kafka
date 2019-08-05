@@ -1,5 +1,6 @@
 package com.github.springbootkafka.pojo;
 
+import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KafkaDataDO<T>  {
+public class KafkaDataDO<T> {
     private String name;
 
     private T t;
 
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }

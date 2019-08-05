@@ -1,6 +1,5 @@
 package com.github.springbootkafka.producer;
 
-import com.github.springbootkafka.pojo.KafkaDataDO;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -22,11 +21,11 @@ import javax.annotation.Resource;
 public class KafkaProducer {
 
     @Resource
-    private KafkaTemplate<String, KafkaDataDO<String>> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void onSend(String topic, KafkaDataDO<String> data) {
+    public void onSend(String topic, String data) {
         kafkaTemplate.send(topic, data);
-        ListenableFuture<SendResult<String, KafkaDataDO<String>>> result = kafkaTemplate.send(topic, data);
+        ListenableFuture<SendResult<String, String>> result = kafkaTemplate.send(topic, data);
     }
 
 }
