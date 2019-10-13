@@ -1,7 +1,7 @@
 package com.github.springbootkafka.consumer;
 
 import com.alibaba.fastjson.JSON;
-import com.github.springbootkafka.pojo.KafkaDataDO;
+import com.github.springbootkafka.pojo.KafkaDateDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,10 +22,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class KafkaConsumer {
+public class KafkaDateConsumer {
 
-    @KafkaListener(topics = "TestTopic1", groupId = "TestGroup", clientIdPrefix = "${spring.cloud.client.ip-address}")
-    public void onMessage(List<ConsumerRecord<String, KafkaDataDO<String>>> dataList) {
+    @KafkaListener(topics = "DateTopic", groupId = "TestGroup", clientIdPrefix = "${spring.cloud.client.ip-address}")
+    public void onMessage(List<ConsumerRecord<String, KafkaDateDO<String>>> dataList) {
         // HostInfoEnvironmentPostProcessor
         dataList.stream().map(ConsumerRecord::value).forEach(one -> System.out.println("接收到数据:" + JSON.toJSONString(one)));
     }

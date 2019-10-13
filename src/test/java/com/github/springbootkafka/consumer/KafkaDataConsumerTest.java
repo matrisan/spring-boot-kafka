@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 @ActiveProfiles("junit")
 @RunWith(SpringRunner.class)
 @EmbeddedKafka(controlledShutdown = true, topics = "foo")
-public class KafkaConsumerTest {
+public class KafkaDataConsumerTest {
 
     @Resource
     private EmbeddedKafkaBroker kafkaEmbedded;

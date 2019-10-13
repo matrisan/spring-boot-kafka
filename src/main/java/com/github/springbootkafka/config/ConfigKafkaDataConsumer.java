@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -24,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-public class ConfigKafkaConsumer {
+public class ConfigKafkaDataConsumer {
 
     @Resource
     private KafkaProperties kafkaProperties;
@@ -41,6 +42,7 @@ public class ConfigKafkaConsumer {
     /**
      * @return kafka 客户端
      */
+    @Primary
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KafkaDataDO<String>> kafkaListenerContainerFactory(ConsumerFactory<String, KafkaDataDO<String>> consumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, KafkaDataDO<String>> factory = new ConcurrentKafkaListenerContainerFactory<>();
